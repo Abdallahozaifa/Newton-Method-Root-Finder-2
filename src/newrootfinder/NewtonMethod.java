@@ -24,6 +24,10 @@ public class NewtonMethod {
         nmc.setLocation(870, 90);
         nmc.setVisible(true);     
     }
+    /**
+     * intializes the numbers the user put into the function
+     * @return weather the numbers can be initialized or not
+     */
     public boolean initNumbers(){
         try{
             a = Double.parseDouble(inputNumbers[0]);
@@ -39,14 +43,29 @@ public class NewtonMethod {
         return false;
     }
     
+    /**
+     * the function with the constants the user supplies
+     * @param x
+     * @returns the function result
+     */
     public double function(double x){
         return a*Math.pow(x, 9) + b*Math.pow(x, 7) + c*Math.pow(x, 5) + d*Math.pow(x, 3) + e*x + f;
     }
     
+    /**
+     * the derivative of the function 
+     * @param x
+     * @returns the derivative of the function result
+     */
     public double functionPrime(double x){
         return 9*a*Math.pow(x, 8)+ 7*b*Math.pow(x, 6) + 5*c*Math.pow(x, 4) + 3*d*Math.pow(x, 2) + e;
     }
     
+    /**
+     * the second derivative of the function
+     * @param x
+     * @returns the second derivative of the function
+     */
     public double functionPrime2(double x){
         return 72*a*Math.pow(x, 7)+ 42*b*Math.pow(x, 5) + 20*c*Math.pow(x, 3) + 6*d*x;
     }
@@ -61,10 +80,8 @@ public class NewtonMethod {
     
     public static double newtonMethod(double x, Function<Double, Double> function, Function<Double,Double> functionPrime, int iteration){        
         double guess = x;       
-        //x = function / functionPrime; // the difference between the function and derivative
         x = guess - (function.apply(guess)/functionPrime.apply(guess)); //newtons method
         System.out.printf("X"+ iteration+ ": %f" + " f(x): %f\n", x, function.apply(guess));
-        //printToTextArea("X"+ iteration + ":  " + x + "   f(x): " + function + "\n");
         iteration++;
         // if new solution - old solution is less than 0.0001 then stop
         if (Math.abs(guess - x) < 0.0001){          

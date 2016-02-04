@@ -35,7 +35,6 @@ public class NewtonsMethodCalculator extends javax.swing.JFrame {
         displayFunction("a","b","c","d","e","f");
         nm = new NewtonMethod();
         initNumbers();
-        //disableSearchButton();
         
     }
     /**
@@ -49,10 +48,12 @@ public class NewtonsMethodCalculator extends javax.swing.JFrame {
     public NewtonsMethodCalculator(GraphicsConfiguration gc) {
         super(gc);
     }
-    
-    
+    /**
+     * initializes the text fields and adds event listeners for all the textboxes
+     */
     public void initNumbers(){
-        Arrays.fill(inputNumbers, "");
+        Arrays.fill(inputNumbers, ""); // fills the array with nothing so that null isn't displayed
+        // sets names for the textfields to identify each one in the event handler
         aTF.setName("aField");
         bTF.setName("bField");
         cTF.setName("cField");
@@ -64,6 +65,7 @@ public class NewtonsMethodCalculator extends javax.swing.JFrame {
             public void keyReleased(KeyEvent e) {
                 JTextField tf = (JTextField) e.getSource();
                 String text = tf.getText();
+                // obtains the textfield that triggers the event
                 switch (e.getComponent().getName()){
                     case "aField":
                         inputNumbers[0] = text;
@@ -83,10 +85,12 @@ public class NewtonsMethodCalculator extends javax.swing.JFrame {
                     case "fField":
                         inputNumbers[5] = text;
                         break;
-                }    
+                }
+                // displays the function on screen and updates each number
                 displayFunction(inputNumbers[0], inputNumbers[1], inputNumbers[2], inputNumbers[3], inputNumbers[4], inputNumbers[5]);
             }
         };
+        // registers the listeners with the event handler
         aTF.addKeyListener(myAdaptor);
         bTF.addKeyListener(myAdaptor);
         cTF.addKeyListener(myAdaptor);
@@ -103,22 +107,40 @@ public class NewtonsMethodCalculator extends javax.swing.JFrame {
     }
     
     Random random = new Random();
+    /**
+     * generates a random number
+     * @returns a random number between -5000 and 5000 
+     */
     public int randNum(){    
         return random.nextInt(10001) - 5000;
     }
-    
+    /**
+     * Sets the value for the root label for the user to see on the frame
+     * @param root 
+     */
     public static void setRoot(String root){
         rootLabel.setText(root);
     }
-    
+    /**
+     * Sets the value for the guess label for the user to see on the frame
+     * @param guess 
+     */
     public void setGuess(String guess){
         guessLabel.setText(guess);
     }
-    
+    /**
+     * Sets the value for the extrema label for the user to see on the frame
+     * @param extrema 
+     */
     public void setExtrema(String extrema) {
         extremaLabel.setText(extrema);
     }
     
+    /**
+     * Checks to see if the string that is passed in is a double value
+     * @param s
+     * @returns true if double and false if not
+     */
     public static boolean isDouble(String s) {
         try { 
             Double.parseDouble(s); 
@@ -131,6 +153,9 @@ public class NewtonsMethodCalculator extends javax.swing.JFrame {
         return true;
     }
     
+    /**
+     * Input verifier for the text fields so that the user can't not proceed to the next field until is double is true
+     */
     public class NumberVerifier extends InputVerifier{
         @Override
         public boolean verify(JComponent input) {
@@ -545,8 +570,9 @@ public class NewtonsMethodCalculator extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        int randomNum = randNum();
+        int randomNum = randNum(); // generates a random number every time search button is clicked
         double root,criticalPoint,extrema;
+        // will not initialize the numbers unless all textfieds are filled 
         if(nm.initNumbers() == true){
             nm.initNumbers();
         }else{
@@ -555,17 +581,17 @@ public class NewtonsMethodCalculator extends javax.swing.JFrame {
         setGuess(Integer.toString(randomNum));
         System.out.printf("First Guess: %d\n", randomNum);
         System.out.printf("Output!\n");
+        // root of the function
         root = nm.newtonMethod(randomNum, funcGuess -> nm.function(funcGuess),funcGuess -> nm.functionPrime(funcGuess),1);
         setRoot("" + root);
+            // trys to find a critical point, stackoverflow exception indicates that there is no critical point
             try{
-                criticalPoint = nm.newtonMethod(randomNum, funcGuess -> nm.functionPrime(funcGuess), funcGuess -> nm.functionPrime2(funcGuess), randomNum);
+                criticalPoint = nm.newtonMethod(randomNum, funcGuess -> nm.functionPrime(funcGuess), funcGuess -> nm.functionPrime2(funcGuess), 1);
                 extrema = nm.function(criticalPoint);
                 setExtrema("" + extrema);
             }catch(StackOverflowError sofe){
                 setExtrema("No Local Extrema!");
             }
-        
-        
     }//GEN-LAST:event_searchButtonActionPerformed
 
     /**
